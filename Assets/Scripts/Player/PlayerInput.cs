@@ -1,36 +1,37 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private PlayerInputActions inputActions;
-    private PlayerMover playerMover;
+    [Header("Game Components")]
+    [SerializeField] private PlayerInputActions gameControls;
+    private PlayerMover characterController;
     
     private void Awake()
     {
-        playerMover = GetComponent<PlayerMover>();
-        inputActions = new PlayerInputActions();
+        characterController = GetComponent<PlayerMover>();
+        gameControls = new PlayerInputActions();
     }
     
     private void OnEnable()
     {
-        inputActions?.Enable();
+        gameControls?.Enable();
     }
     
     private void OnDisable()
     {
-        inputActions?.Disable();
+        gameControls?.Disable();
     }
     
     private void Update()
     {
-        Vector2 movementInput = inputActions.Player.Movement.ReadValue<Vector2>();
+        Vector2 playerDirection = gameControls.Player.Movement.ReadValue<Vector2>();
         
-        if (movementInput != Vector2.zero)
+        if (playerDirection != Vector2.zero)
         {
-            Debug.Log($"Movement Input: X={movementInput.x}, Y={movementInput.y}");
+            Debug.Log($"Player Direction: X={playerDirection.x}, Y={playerDirection.y}");
         }
         
-        playerMover.Move(movementInput);
+        characterController.Move(playerDirection);
     }
 }
